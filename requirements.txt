@@ -1,0 +1,18 @@
+# Runtime dependencies for the action.
+# No FastAPI, no uvicorn, no webhooks — this action runs entirely in the
+# customer's GitHub Actions runner and posts Check Runs using the workflow's
+# built-in GITHUB_TOKEN. See docs/architecture-no-server.md.
+
+python-hcl2>=4.3.0,<5.0
+pydantic>=2.5.0
+
+# Note: HTTP calls (the single POST to api.github.com/check-runs) use the
+# Python stdlib `urllib.request` to avoid pulling httpx/requests into the
+# action runtime. Keep dependencies minimal and auditable.
+
+# Development dependencies (installed via `pip install -e ".[dev]"`)
+# pytest>=7.4.0
+# pytest-asyncio>=0.23.0
+# pytest-cov>=4.1.0
+# ruff>=0.1.0
+# mypy>=1.8.0
