@@ -21,8 +21,6 @@ from shared.schemas import (
 )
 
 
-
-
 def _normalize_hcl_keys(obj):
     """Strip wrapping double-quotes from dict keys returned by python-hcl2 v8+.
 
@@ -32,8 +30,9 @@ def _normalize_hcl_keys(obj):
     """
     if isinstance(obj, dict):
         return {
-            (k[1:-1] if isinstance(k, str) and len(k) >= 2 and k[0] == k[-1] == '"' else k):
-            _normalize_hcl_keys(v)
+            (
+                k[1:-1] if isinstance(k, str) and len(k) >= 2 and k[0] == k[-1] == '"' else k
+            ): _normalize_hcl_keys(v)
             for k, v in obj.items()
         }
     if isinstance(obj, list):
