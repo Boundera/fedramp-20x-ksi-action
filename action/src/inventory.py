@@ -21,6 +21,26 @@ from shared.schemas import (
 )
 
 
+
+
+def _normalize_hcl_keys(obj):
+    """Strip wrapping double-quotes from dict keys returned by python-hcl2 v8+.
+
+    Older versions of python-hcl2 return unquoted keys (e.g., {"vpc": ...}).
+    v8.x returns the raw lexer token including the quote characters
+    (e.g., {'"vpc"': ...}). Normalize so downstream code is version-agnostic.
+    """
+    if isinstance(obj, dict):
+        return {
+            (k[1:-1] if isinstance(k, str) and len(k) >= 2 and k[0] == k[-1] == '"' else k):
+            _normalize_hcl_keys(v)
+            for k, v in obj.items()
+        }
+    if isinstance(obj, list):
+        return [_normalize_hcl_keys(x) for x in obj]
+    return obj
+
+
 def parse_tf_file(file_path: Path) -> dict[str, Any] | None:
     """Parse a single Terraform file.
 
@@ -32,7 +52,7 @@ def parse_tf_file(file_path: Path) -> dict[str, Any] | None:
     """
     try:
         with open(file_path, encoding="utf-8") as f:
-            return hcl2.load(f)
+            return _normalize_hcl_keys(hcl2.load(f))
     except Exception:
         # Silently skip files that can't be parsed
         # terraform validate will catch actual syntax errors

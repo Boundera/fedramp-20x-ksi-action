@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
-    "python-hcl2>=4.3.0",
+    "python-hcl2>=4.3.0,<5.0",
     "pydantic>=2.5.0",
 ]
 

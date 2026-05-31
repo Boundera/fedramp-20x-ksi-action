@@ -3,7 +3,7 @@
 # customer's GitHub Actions runner and posts Check Runs using the workflow's
 # built-in GITHUB_TOKEN. See docs/architecture-no-server.md.
 
-python-hcl2>=4.3.0
+python-hcl2>=4.3.0,<5.0
 pydantic>=2.5.0
 
 # Note: HTTP calls (the single POST to api.github.com/check-runs) use the
