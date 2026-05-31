@@ -80,6 +80,7 @@ def set_output(name: str, value: str) -> None:
     with open(output_file, "a", encoding="utf-8") as f:
         if "\n" in value:
             import uuid
+
             delim = uuid.uuid4().hex
             f.write(f"{name}<<{delim}\n{value}\n{delim}\n")
         else:
@@ -107,8 +108,9 @@ def log_error(message: str) -> None:
 # -----------------------------------------------------------------------------
 
 
-def evaluate_mla_evc(workspace: Path, output_dir: Path, ctx: dict[str, str],
-                    detection, terraform_version: str | None) -> dict:
+def evaluate_mla_evc(
+    workspace: Path, output_dir: Path, ctx: dict[str, str], detection, terraform_version: str | None
+) -> dict:
     """Evaluate KSI-MLA-EVC (Evaluating Configurations).
 
     Uses the top-level evaluate/inventory/evidence modules ported from the
@@ -116,8 +118,8 @@ def evaluate_mla_evc(workspace: Path, output_dir: Path, ctx: dict[str, str],
     """
     from action.src.detect import get_tf_root_paths  # noqa: PLC0415
     from action.src.evaluate import evaluate_terraform  # noqa: PLC0415
-    from action.src.inventory import generate_inventory  # noqa: PLC0415
     from action.src.evidence import build_evidence_pack  # noqa: PLC0415
+    from action.src.inventory import generate_inventory  # noqa: PLC0415
 
     eval_result = None
     inventory = None
@@ -174,12 +176,15 @@ def evaluate_mla_evc(workspace: Path, output_dir: Path, ctx: dict[str, str],
     }
 
 
-def evaluate_cna_rnt(workspace: Path, output_dir: Path, ctx: dict[str, str],
-                    detection, terraform_version: str | None) -> dict:
+def evaluate_cna_rnt(
+    workspace: Path, output_dir: Path, ctx: dict[str, str], detection, terraform_version: str | None
+) -> dict:
     """Evaluate KSI-CNA-RNT (Restricting Network Traffic)."""
-    from action.src.ksi.cna.shared.network_inventory import extract_network_inventory  # noqa: PLC0415
     from action.src.ksi.cna.rnt.evaluator import evaluate_cna_rnt as _evaluate  # noqa: PLC0415
     from action.src.ksi.cna.rnt.evidence import build_cna_rnt_evidence_pack  # noqa: PLC0415
+    from action.src.ksi.cna.shared.network_inventory import (
+        extract_network_inventory,  # noqa: PLC0415
+    )
 
     log_group("KSI-CNA-RNT: Network inventory")
     net_inv = extract_network_inventory(workspace, detection.tf_paths)
@@ -254,6 +259,7 @@ def write_combined_results(output_dir: Path, results: list[dict], ctx: dict[str,
 def _frmr_version() -> str:
     try:
         from action.src.frmr_loader import load_frmr  # noqa: PLC0415
+
         return load_frmr().version
     except Exception:
         return "unknown"
@@ -270,9 +276,9 @@ def post_check_runs_for(results: list[dict], ctx: dict[str, str]) -> list[int]:
     Returns the list of created Check Run IDs.
     """
     from action.src.check_run import (  # noqa: PLC0415
-        post_check_run,
-        build_summary_markdown,
         CheckRunError,
+        build_summary_markdown,
+        post_check_run,
     )
     from action.src.frmr_loader import load_frmr  # noqa: PLC0415
 
@@ -335,9 +341,10 @@ def main() -> int:
     from action.src.evaluate import get_terraform_version  # noqa: PLC0415
     from action.src.frmr_loader import resolve_requested_ksi_ids  # noqa: PLC0415
 
-    root_paths = [p.strip() for p in os.environ.get("INPUT_ROOT_PATHS", ".").split(",") if p.strip()]
+    [p.strip() for p in os.environ.get("INPUT_ROOT_PATHS", ".").split(",") if p.strip()]
     requested_ksi_ids = [
-        x.strip() for x in os.environ.get("INPUT_KSI_IDS", "KSI-MLA-EVC,KSI-CNA-RNT").split(",")
+        x.strip()
+        for x in os.environ.get("INPUT_KSI_IDS", "KSI-MLA-EVC,KSI-CNA-RNT").split(",")
         if x.strip()
     ]
 
@@ -375,9 +382,13 @@ def main() -> int:
     results: list[dict] = []
     for ind in resolved:
         if ind.id == "KSI-MLA-EVC":
-            results.append(evaluate_mla_evc(workspace, output_dir, ctx, detection, terraform_version))
+            results.append(
+                evaluate_mla_evc(workspace, output_dir, ctx, detection, terraform_version)
+            )
         elif ind.id == "KSI-CNA-RNT":
-            results.append(evaluate_cna_rnt(workspace, output_dir, ctx, detection, terraform_version))
+            results.append(
+                evaluate_cna_rnt(workspace, output_dir, ctx, detection, terraform_version)
+            )
         else:
             log_warning(
                 f"Indicator {ind.id} is in FRMR but not yet implemented by this action. "
@@ -428,8 +439,9 @@ def main() -> int:
     return 0
 
 
-def _build_workflow_summary(results: list[dict], ctx: dict[str, str],
-                            check_run_ids: list[int]) -> str:
+def _build_workflow_summary(
+    results: list[dict], ctx: dict[str, str], check_run_ids: list[int]
+) -> str:
     lines = [
         "## Boundera/fedramp-20x-ksi-action — Results",
         "",

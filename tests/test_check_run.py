@@ -46,8 +46,18 @@ class TestBuildSummaryMarkdown:
             "ksi_statement": "Persistently evaluate and test the configuration of machine-based information resources, especially infrastructure as code.",
             "status": "PASS",
             "criteria": [
-                {"id": "EVC-A", "name": "Surface in scope", "status": "PASS", "reason": "Terraform .tf files detected"},
-                {"id": "EVC-B", "name": "Machine-based evaluation", "status": "PASS", "reason": "terraform init + validate succeeded"},
+                {
+                    "id": "EVC-A",
+                    "name": "Surface in scope",
+                    "status": "PASS",
+                    "reason": "Terraform .tf files detected",
+                },
+                {
+                    "id": "EVC-B",
+                    "name": "Machine-based evaluation",
+                    "status": "PASS",
+                    "reason": "terraform init + validate succeeded",
+                },
             ],
             "repository": "Boundera/example",
             "commit_sha": "abc1234567890def",
@@ -97,7 +107,9 @@ class TestBuildSummaryMarkdown:
         assert "abc1234567890def" not in md
 
     def test_artifact_link_when_provided(self, base_args: dict) -> None:
-        md = build_summary_markdown(**base_args, artifact_name="evidence_ksi-mla-evc_abc1234_now.zip")
+        md = build_summary_markdown(
+            **base_args, artifact_name="evidence_ksi-mla-evc_abc1234_now.zip"
+        )
         assert "evidence_ksi-mla-evc_abc1234_now.zip" in md
 
     def test_run_url_when_provided(self, base_args: dict) -> None:
@@ -184,5 +196,7 @@ class TestPostCheckRun:
         assert captured["body"]["status"] == "completed"
         assert captured["body"]["conclusion"] == "success"
         # Confirm we're using a Bearer token, not Basic auth
-        auth = captured["headers"].get("Authorization", captured["headers"].get("authorization", ""))
+        auth = captured["headers"].get(
+            "Authorization", captured["headers"].get("authorization", "")
+        )
         assert auth.startswith("Bearer ")

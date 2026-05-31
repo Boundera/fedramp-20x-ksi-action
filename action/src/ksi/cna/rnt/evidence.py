@@ -12,12 +12,9 @@ from pathlib import Path
 from typing import Any
 
 from shared.constants_cna import (
-    CNA01_APPLIES_TO,
     CNA01_ARTIFACT_PREFIX,
     CNA01_KSI_ID,
     CNA01_KSI_NAME,
-    CNA01_RELATED_CONTROLS,
-    CNA01_REQUIREMENT_TEXT,
 )
 from shared.schemas_network import (
     CNA01CriterionResult,

@@ -41,12 +41,12 @@ class KSIIndicator:
     along with all metadata an evaluator needs.
     """
 
-    id: str                              # canonical mnemonic e.g. "KSI-MLA-EVC"
-    fka: str | None                      # formerly known as e.g. "KSI-MLA-05"
-    family: str                          # family short_name e.g. "MLA"
-    family_name: str                     # e.g. "Monitoring, Logging, and Auditing"
-    name: str                            # e.g. "Evaluating Configurations"
-    statement: str                       # verbatim FRMR requirement text
+    id: str  # canonical mnemonic e.g. "KSI-MLA-EVC"
+    fka: str | None  # formerly known as e.g. "KSI-MLA-05"
+    family: str  # family short_name e.g. "MLA"
+    family_name: str  # e.g. "Monitoring, Logging, and Auditing"
+    name: str  # e.g. "Evaluating Configurations"
+    statement: str  # verbatim FRMR requirement text
     nist_800_53_controls: tuple[str, ...] = field(default_factory=tuple)
     impact_levels: tuple[str, ...] = field(default_factory=tuple)
     retired: bool = False
@@ -135,22 +135,15 @@ def load_frmr(bundle_dir: str | None = None) -> FRMRDocument:
     Returns:
         Parsed FRMRDocument with indicators indexed by id and fka.
     """
-    if bundle_dir is None:
-        directory = _bundle_dir()
-    else:
-        directory = Path(bundle_dir)
+    directory = _bundle_dir() if bundle_dir is None else Path(bundle_dir)
 
     if not directory.is_dir():
-        raise FileNotFoundError(
-            f"FRMR bundle directory does not exist: {directory}"
-        )
+        raise FileNotFoundError(f"FRMR bundle directory does not exist: {directory}")
 
     filename = _read_current_filename(directory)
     json_path = directory / filename
     if not json_path.is_file():
-        raise FileNotFoundError(
-            f"FRMR JSON file referenced by CURRENT.txt not found: {json_path}"
-        )
+        raise FileNotFoundError(f"FRMR JSON file referenced by CURRENT.txt not found: {json_path}")
 
     logger.info("Loading FRMR document from %s", json_path)
     raw = json.loads(json_path.read_text(encoding="utf-8"))
@@ -203,9 +196,8 @@ def _parse_frmr(raw: dict[str, Any]) -> FRMRDocument:
                         if isinstance(level_block, dict):
                             statements_by_level[level] = level_block.get("statement", "")
                 # Pick moderate (or first) as the canonical single statement
-                statement = (
-                    statements_by_level.get("moderate")
-                    or next(iter(statements_by_level.values()), "")
+                statement = statements_by_level.get("moderate") or next(
+                    iter(statements_by_level.values()), ""
                 )
 
             controls_raw = ind.get("controls", [])

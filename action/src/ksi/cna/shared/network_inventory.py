@@ -42,7 +42,7 @@ def parse_tf_file(file_path: Path) -> dict[str, Any] | None:
         Parsed HCL dict or None if parsing failed
     """
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             return hcl2.load(f)
     except Exception:
         # Silently skip files that can't be parsed
@@ -70,8 +70,7 @@ def is_unrestricted_rule(
     """
     # Check if any CIDR is unrestricted
     has_unrestricted_cidr = bool(
-        set(cidr_blocks) & UNRESTRICTED_CIDRS
-        or set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS
+        set(cidr_blocks) & UNRESTRICTED_CIDRS or set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS
     )
 
     if not has_unrestricted_cidr:
@@ -86,9 +85,7 @@ def is_unrestricted_rule(
 
     # Check for all ports (0-65535 or -1)
     if from_port is not None and to_port is not None:
-        is_all_ports = (from_port == 0 and to_port == 65535) or (
-            from_port == -1 or to_port == -1
-        )
+        is_all_ports = (from_port == 0 and to_port == 65535) or (from_port == -1 or to_port == -1)
         return is_all_ports
 
     return False
@@ -117,8 +114,7 @@ def check_sensitive_port_exposure(
 
     # Check if rule allows access from anywhere
     has_unrestricted_cidr = bool(
-        set(cidr_blocks) & UNRESTRICTED_CIDRS
-        or set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS
+        set(cidr_blocks) & UNRESTRICTED_CIDRS or set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS
     )
 
     if not has_unrestricted_cidr:
@@ -127,12 +123,14 @@ def check_sensitive_port_exposure(
     # All protocols means all ports are potentially exposed
     if protocol.lower() in ALL_PROTOCOLS:
         for port, service in SENSITIVE_PORTS.items():
-            exposed.append({
-                "port": port,
-                "service": service,
-                "cidr": list(set(cidr_blocks) & UNRESTRICTED_CIDRS)
-                or list(set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS),
-            })
+            exposed.append(
+                {
+                    "port": port,
+                    "service": service,
+                    "cidr": list(set(cidr_blocks) & UNRESTRICTED_CIDRS)
+                    or list(set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS),
+                }
+            )
         return exposed
 
     # Check specific port range
@@ -141,12 +139,14 @@ def check_sensitive_port_exposure(
 
     for port, service in SENSITIVE_PORTS.items():
         if from_port <= port <= to_port:
-            exposed.append({
-                "port": port,
-                "service": service,
-                "cidr": list(set(cidr_blocks) & UNRESTRICTED_CIDRS)
-                or list(set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS),
-            })
+            exposed.append(
+                {
+                    "port": port,
+                    "service": service,
+                    "cidr": list(set(cidr_blocks) & UNRESTRICTED_CIDRS)
+                    or list(set(ipv6_cidr_blocks) & UNRESTRICTED_CIDRS),
+                }
+            )
 
     return exposed
 
@@ -221,9 +221,7 @@ def extract_security_group_rule(
     )
 
 
-def extract_security_groups(
-    parsed: dict[str, Any], file_path: str
-) -> list[SecurityGroupInfo]:
+def extract_security_groups(parsed: dict[str, Any], file_path: str) -> list[SecurityGroupInfo]:
     """Extract security groups from parsed Terraform.
 
     Args:
@@ -247,9 +245,7 @@ def extract_security_groups(
                 if not isinstance(sg_config, dict):
                     continue
 
-                sg = _parse_security_group(
-                    sg_name, sg_config, file_path, "aws_security_group"
-                )
+                sg = _parse_security_group(sg_name, sg_config, file_path, "aws_security_group")
                 security_groups.append(sg)
 
         # Azure Network Security Group
@@ -396,9 +392,7 @@ def _parse_security_group(
     )
 
 
-def _parse_azure_nsg(
-    name: str, config: dict[str, Any], file_path: str
-) -> SecurityGroupInfo:
+def _parse_azure_nsg(name: str, config: dict[str, Any], file_path: str) -> SecurityGroupInfo:
     """Parse an Azure Network Security Group configuration.
 
     Args:
@@ -456,14 +450,10 @@ def _parse_azure_nsg(
         if isinstance(source_prefixes, list):
             cidr_blocks.extend(source_prefixes)
 
-        is_unrestricted = is_unrestricted_rule(
-            cidr_blocks, [], from_port, to_port, protocol
-        )
+        is_unrestricted = is_unrestricted_rule(cidr_blocks, [], from_port, to_port, protocol)
 
         if direction == "inbound":
-            exposed = check_sensitive_port_exposure(
-                cidr_blocks, [], from_port, to_port, protocol
-            )
+            exposed = check_sensitive_port_exposure(cidr_blocks, [], from_port, to_port, protocol)
             sensitive_ports_exposed.extend(exposed)
 
             ingress_rules.append(
@@ -502,9 +492,7 @@ def _parse_azure_nsg(
     )
 
 
-def _parse_gcp_firewall(
-    name: str, config: dict[str, Any], file_path: str
-) -> SecurityGroupInfo:
+def _parse_gcp_firewall(name: str, config: dict[str, Any], file_path: str) -> SecurityGroupInfo:
     """Parse a GCP firewall rule configuration.
 
     Args:
@@ -560,9 +548,7 @@ def _parse_gcp_firewall(
 
             cidr_blocks = source_ranges if direction == "INGRESS" else dest_ranges
 
-            is_unrestricted = is_unrestricted_rule(
-                cidr_blocks, [], from_port, to_port, protocol
-            )
+            is_unrestricted = is_unrestricted_rule(cidr_blocks, [], from_port, to_port, protocol)
 
             if direction == "INGRESS":
                 exposed = check_sensitive_port_exposure(
@@ -708,9 +694,7 @@ def extract_subnets(parsed: dict[str, Any], file_path: str) -> list[SubnetInfo]:
     return subnets
 
 
-def extract_route_tables(
-    parsed: dict[str, Any], file_path: str
-) -> list[RouteTableInfo]:
+def extract_route_tables(parsed: dict[str, Any], file_path: str) -> list[RouteTableInfo]:
     """Extract route tables from parsed Terraform.
 
     Args:
@@ -788,9 +772,7 @@ def extract_route_tables(
     return route_tables
 
 
-def extract_internet_gateways(
-    parsed: dict[str, Any], file_path: str
-) -> list[InternetGatewayInfo]:
+def extract_internet_gateways(parsed: dict[str, Any], file_path: str) -> list[InternetGatewayInfo]:
     """Extract internet gateways from parsed Terraform.
 
     Args:
@@ -822,9 +804,7 @@ def extract_internet_gateways(
     return gateways
 
 
-def extract_nat_gateways(
-    parsed: dict[str, Any], file_path: str
-) -> list[NATGatewayInfo]:
+def extract_nat_gateways(parsed: dict[str, Any], file_path: str) -> list[NATGatewayInfo]:
     """Extract NAT gateways from parsed Terraform.
 
     Args:
@@ -856,9 +836,7 @@ def extract_nat_gateways(
     return gateways
 
 
-def extract_load_balancers(
-    parsed: dict[str, Any], file_path: str
-) -> list[LoadBalancerInfo]:
+def extract_load_balancers(parsed: dict[str, Any], file_path: str) -> list[LoadBalancerInfo]:
     """Extract load balancers from parsed Terraform.
 
     Args:
@@ -954,10 +932,7 @@ def extract_network_inventory(
     source_files: list[str] = []
 
     # Determine paths to scan
-    if tf_paths:
-        scan_paths = [root / p for p in tf_paths]
-    else:
-        scan_paths = [root]
+    scan_paths = [root / p for p in tf_paths] if tf_paths else [root]
 
     for scan_path in scan_paths:
         if not scan_path.exists():
@@ -965,9 +940,7 @@ def extract_network_inventory(
 
         for dirpath, dirnames, filenames in os.walk(scan_path):
             # Filter excluded directories
-            dirnames[:] = [
-                d for d in dirnames if d not in EXCLUDED_DIRS and not d.startswith(".")
-            ]
+            dirnames[:] = [d for d in dirnames if d not in EXCLUDED_DIRS and not d.startswith(".")]
 
             current_dir = Path(dirpath)
 
@@ -989,9 +962,7 @@ def extract_network_inventory(
                 all_vpcs.extend(extract_vpcs(parsed, rel_path))
                 all_subnets.extend(extract_subnets(parsed, rel_path))
                 all_route_tables.extend(extract_route_tables(parsed, rel_path))
-                all_internet_gateways.extend(
-                    extract_internet_gateways(parsed, rel_path)
-                )
+                all_internet_gateways.extend(extract_internet_gateways(parsed, rel_path))
                 all_nat_gateways.extend(extract_nat_gateways(parsed, rel_path))
                 all_load_balancers.extend(extract_load_balancers(parsed, rel_path))
 

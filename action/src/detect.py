@@ -7,7 +7,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from shared.constants import EXCLUDED_DIRS, TF_FILE_PATTERN, TF_LOCKFILE_NAME
+from shared.constants import EXCLUDED_DIRS, TF_LOCKFILE_NAME
 from shared.schemas import TerraformDetection
 
 
@@ -45,7 +45,7 @@ def scan_for_terraform(root_path: str | Path = ".") -> TerraformDetection:
                 lockfile_found = True
 
     # Convert tf_files to relative paths for output
-    tf_file_paths = [str(f.relative_to(root)) for f in sorted(tf_files)]
+    [str(f.relative_to(root)) for f in sorted(tf_files)]
 
     return TerraformDetection(
         detected=len(tf_files) > 0,

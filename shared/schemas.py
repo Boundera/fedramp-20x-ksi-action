@@ -4,7 +4,6 @@ These schemas define the exact structure of all JSON files in the evidence pack.
 Schema version is pinned to 1.0 per specification.
 """
 
-from datetime import datetime
 from enum import Enum
 from typing import Any
 

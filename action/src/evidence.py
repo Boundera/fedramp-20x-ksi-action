@@ -5,13 +5,13 @@ Generates the complete evidence pack artifact for KSI-MLA-EVC.
 
 import hashlib
 import json
-import os
 import sys
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from action.src.evaluate import TerraformEvalResult
 from shared.constants import ARTIFACT_PREFIX, CRITERIA_DEFINITIONS, KSI_ID, KSI_REQUIREMENT_TEXT
 from shared.schemas import (
     CollectedAt,
@@ -28,8 +28,6 @@ from shared.schemas import (
     TerraformInventory,
     ToolsInfo,
 )
-
-from action.src.evaluate import TerraformEvalResult
 
 
 class EvidencePackBuilder:
@@ -285,7 +283,9 @@ class EvidencePackBuilder:
 
         return criteria
 
-    def compute_overall_status(self, criteria: list[CriterionResult]) -> tuple[KSIStatus, list[str]]:
+    def compute_overall_status(
+        self, criteria: list[CriterionResult]
+    ) -> tuple[KSIStatus, list[str]]:
         """Compute overall KSI status from criteria.
 
         Rules:

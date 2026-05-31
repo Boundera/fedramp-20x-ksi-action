@@ -61,7 +61,7 @@ class TestResolveByCanonicalID:
         ind = load_frmr().resolve("KSI-CNA-RNT")
         assert ind.id == "KSI-CNA-RNT"
         assert ind.fka == "KSI-CNA-01"
-        assert "Restricting Network Traffic" == ind.name
+        assert ind.name == "Restricting Network Traffic"
 
     def test_resolves_iam_mfa(self) -> None:
         ind = load_frmr().resolve("KSI-IAM-MFA")

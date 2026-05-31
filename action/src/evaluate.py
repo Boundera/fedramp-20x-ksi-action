@@ -39,7 +39,6 @@ def get_terraform_version() -> str | None:
             timeout=30,
         )
         if result.returncode == 0:
-
             version_info = json.loads(result.stdout)
             return version_info.get("terraform_version")
     except (subprocess.TimeoutExpired, FileNotFoundError, json.JSONDecodeError):

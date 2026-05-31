@@ -5,8 +5,6 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-import pytest
-
 from action.src.detect import scan_for_terraform
 from action.src.evidence import EvidencePackBuilder, build_evidence_pack
 from action.src.inventory import generate_inventory

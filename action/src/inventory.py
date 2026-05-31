@@ -31,7 +31,7 @@ def parse_tf_file(file_path: Path) -> dict[str, Any] | None:
         Parsed HCL dict or None if parsing failed
     """
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             return hcl2.load(f)
     except Exception:
         # Silently skip files that can't be parsed
@@ -129,9 +129,7 @@ def extract_modules(parsed: dict[str, Any], file_path: str) -> list[ModuleInfo]:
     return modules
 
 
-def extract_resources(
-    parsed: dict[str, Any], file_path: str
-) -> dict[str, list[str]]:
+def extract_resources(parsed: dict[str, Any], file_path: str) -> dict[str, list[str]]:
     """Extract resource information from parsed Terraform.
 
     Args:
@@ -150,10 +148,7 @@ def extract_resources(
                 if resource_type not in resources:
                     resources[resource_type] = []
                 # Each instance is a named resource
-                if isinstance(instances, dict):
-                    count = len(instances)
-                else:
-                    count = 1
+                count = len(instances) if isinstance(instances, dict) else 1
                 # Add file path for each instance
                 for _ in range(count):
                     if file_path not in resources[resource_type]:
@@ -184,10 +179,7 @@ def generate_inventory(
     terraform_paths: set[str] = set()
 
     # Determine paths to scan
-    if tf_paths:
-        scan_paths = [root / p for p in tf_paths]
-    else:
-        scan_paths = [root]
+    scan_paths = [root / p for p in tf_paths] if tf_paths else [root]
 
     for scan_path in scan_paths:
         if not scan_path.exists():

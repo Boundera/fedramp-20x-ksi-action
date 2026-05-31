@@ -1,5 +1,11 @@
 """Shared schemas and constants for FedRAMP KSI-MLA-EVC."""
 
+from shared.constants import (
+    CRITERIA_DEFINITIONS,
+    KSI_ID,
+    KSI_REQUIREMENT_TEXT,
+    SCHEMA_VERSION,
+)
 from shared.schemas import (
     CriterionResult,
     CriterionStatus,
@@ -13,12 +19,6 @@ from shared.schemas import (
     TerraformDetection,
     TerraformInventory,
     ToolsInfo,
-)
-from shared.constants import (
-    KSI_ID,
-    KSI_REQUIREMENT_TEXT,
-    CRITERIA_DEFINITIONS,
-    SCHEMA_VERSION,
 )
 
 __all__ = [

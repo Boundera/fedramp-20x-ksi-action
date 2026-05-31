@@ -4,11 +4,9 @@ These schemas define the structure for network inventory and CNA KSI evaluations
 Shared across CNA-01, CNA-02, CNA-03, and CNA-06.
 """
 
-from enum import Enum
 from typing import Any
 
 from pydantic import BaseModel, Field
-
 
 # --- Network Inventory Schemas ---
 
@@ -53,7 +51,9 @@ class EgressRule(BaseModel):
 class SecurityGroupInfo(BaseModel):
     """Security group extracted from Terraform configuration."""
 
-    resource_address: str = Field(description="Terraform resource address (e.g., aws_security_group.web)")
+    resource_address: str = Field(
+        description="Terraform resource address (e.g., aws_security_group.web)"
+    )
     name: str | None = None
     description: str | None = None
     vpc_id: str | None = Field(None, description="VPC reference or ID")
@@ -161,9 +161,7 @@ class NetworkInventory(BaseModel):
 
     schema_version: str = "1.0"
     extracted_at: str = Field(description="ISO 8601 timestamp")
-    source_files: list[str] = Field(
-        default_factory=list, description="Terraform files analyzed"
-    )
+    source_files: list[str] = Field(default_factory=list, description="Terraform files analyzed")
     security_groups: list[SecurityGroupInfo] = Field(default_factory=list)
     vpcs: list[VPCInfo] = Field(default_factory=list)
     subnets: list[SubnetInfo] = Field(default_factory=list)

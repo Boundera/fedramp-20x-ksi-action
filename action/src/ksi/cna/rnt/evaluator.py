@@ -44,7 +44,7 @@ def evaluate_cna_rnt_a(inventory: NetworkInventory) -> CNA01CriterionResult:
                 )
 
     status = "PASS" if not findings else "FAIL"
-    reason = criterion_def["pass_reason"] if status == "PASS" else criterion_def["fail_reason"]
+    criterion_def["pass_reason"] if status == "PASS" else criterion_def["fail_reason"]
 
     return CNA01CriterionResult(
         id="CNA01-A",
@@ -116,9 +116,7 @@ def evaluate_cna_rnt_c(inventory: NetworkInventory) -> CNA01CriterionResult:
             for egress in sg.egress_rules:
                 if egress.is_unrestricted:
                     cidrs = egress.cidr_blocks + egress.ipv6_cidr_blocks
-                    unrestricted_cidrs = [
-                        c for c in cidrs if c in ("0.0.0.0/0", "::/0")
-                    ]
+                    unrestricted_cidrs = [c for c in cidrs if c in ("0.0.0.0/0", "::/0")]
                     findings.append(
                         CNA01Finding(
                             resource=sg.resource_address,

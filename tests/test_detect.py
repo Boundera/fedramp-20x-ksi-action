@@ -1,10 +1,7 @@
 """Tests for Terraform detection module."""
 
-import os
 import tempfile
 from pathlib import Path
-
-import pytest
 
 from action.src.detect import get_tf_root_paths, scan_for_terraform
 

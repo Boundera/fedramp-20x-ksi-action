@@ -2,8 +2,6 @@
 
 from pathlib import Path
 
-import pytest
-
 from action.src.inventory import (
     extract_modules,
     extract_providers,
@@ -72,9 +70,7 @@ class TestExtractProviders:
 
     def test_extracts_provider_blocks(self):
         """Should extract providers from provider blocks."""
-        parsed = {
-            "provider": [{"google": {"project": "my-project", "region": "us-central1"}}]
-        }
+        parsed = {"provider": [{"google": {"project": "my-project", "region": "us-central1"}}]}
 
         providers = extract_providers(parsed, "main.tf")
 
