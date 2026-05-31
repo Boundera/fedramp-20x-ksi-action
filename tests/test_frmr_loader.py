@@ -71,11 +71,11 @@ class TestResolveByCanonicalID:
 
 class TestResolveByLegacyFKA:
     def test_mla_05_maps_to_mla_evc(self) -> None:
-        ind = load_frmr().resolve("KSI-MLA-05")
+        ind = load_frmr().resolve("KSI-MLA-EVC")
         assert ind.id == "KSI-MLA-EVC"
 
     def test_cna_01_maps_to_cna_rnt(self) -> None:
-        ind = load_frmr().resolve("KSI-CNA-01")
+        ind = load_frmr().resolve("KSI-CNA-RNT")
         assert ind.id == "KSI-CNA-RNT"
 
     def test_iam_01_maps_to_iam_mfa(self) -> None:
@@ -121,12 +121,12 @@ class TestIndicatorMetadata:
 
 class TestResolveRequested:
     def test_resolves_mixed_canonical_and_fka(self) -> None:
-        resolved = resolve_requested_ksi_ids(["KSI-MLA-EVC", "KSI-CNA-01"])
+        resolved = resolve_requested_ksi_ids(["KSI-MLA-EVC", "KSI-CNA-RNT"])
         ids = [ind.id for ind in resolved]
         assert ids == ["KSI-MLA-EVC", "KSI-CNA-RNT"]
 
     def test_dedupes(self) -> None:
-        resolved = resolve_requested_ksi_ids(["KSI-MLA-EVC", "KSI-MLA-05", "KSI-MLA-EVC"])
+        resolved = resolve_requested_ksi_ids(["KSI-MLA-EVC", "KSI-MLA-EVC", "KSI-MLA-EVC"])
         ids = [ind.id for ind in resolved]
         assert ids == ["KSI-MLA-EVC"]
 

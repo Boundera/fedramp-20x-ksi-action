@@ -7,7 +7,7 @@ name = "fedramp-20x-ksi-action"
 version = "0.1.0"
 description = "GitHub Action for FedRAMP 20x KSI evaluation against Terraform IaC. No vendor server — runs entirely in customer GitHub Actions runners."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "Boundera"},
@@ -58,14 +58,14 @@ include = ["action*", "shared*"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
 ignore = ["E501"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.10"
 strict = true
 warn_return_any = true
 warn_unused_ignores = true
@@ -73,4 +73,4 @@ warn_unused_ignores = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = "-v --cov=action --cov=shared --cov-report=term-missing"
+addopts = "-v"
