@@ -1,0 +1,147 @@
+name: 'FedRAMP 20x KSI Action'
+description: 'Evaluate Terraform IaC against FedRAMP 20x KSIs (MLA-EVC, CNA-RNT) and post Check Runs. No vendor server in the loop.'
+author: 'Boundera'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  root_paths:
+    description: 'Comma-separated paths to scan for Terraform files'
+    required: false
+    default: '.'
+  ksi_ids:
+    description: 'Comma-separated KSI indicators to evaluate. Legacy IDs (KSI-MLA-05, KSI-CNA-01) are auto-mapped to current mnemonics.'
+    required: false
+    default: 'KSI-MLA-EVC,KSI-CNA-RNT'
+  python_version:
+    description: 'Python version for the action runtime'
+    required: false
+    default: '3.11'
+  terraform_version:
+    description: 'Terraform version to install (leave empty to use pre-installed)'
+    required: false
+    default: ''
+  post_check_run:
+    description: 'Whether to post a GitHub Check Run after evaluation. Set "false" for testing without writing to the commit.'
+    required: false
+    default: 'true'
+  artifact_prefix:
+    description: 'Prefix for uploaded evidence artifact names'
+    required: false
+    default: 'evidence'
+  evidence_retention_days:
+    description: 'How many days to retain the evidence artifact'
+    required: false
+    default: '90'
+
+outputs:
+  status:
+    description: 'Worst status across all evaluated KSIs: PASS, FAIL, or ERROR'
+    value: ${{ steps.evaluate.outputs.status }}
+  mla_evc_status:
+    description: 'KSI-MLA-EVC (Evaluating Configurations) result'
+    value: ${{ steps.evaluate.outputs.mla_evc_status }}
+  cna_rnt_status:
+    description: 'KSI-CNA-RNT (Restricting Network Traffic) result'
+    value: ${{ steps.evaluate.outputs.cna_rnt_status }}
+  cna_01_status:
+    description: 'Alias of cna_rnt_status (kept for migration compatibility with chukyjack/fedrampgpt-ksi-checker). Removed in v1.0.'
+    value: ${{ steps.evaluate.outputs.cna_rnt_status }}
+  evidence_dir:
+    description: 'Absolute path to the evidence directory inside the workspace'
+    value: ${{ steps.evaluate.outputs.evidence_dir }}
+  artifact_names:
+    description: 'JSON array of uploaded artifact names'
+    value: ${{ steps.evaluate.outputs.artifact_names }}
+  check_run_ids:
+    description: 'JSON array of Check Run IDs created on the commit (empty if post_check_run=false)'
+    value: ${{ steps.evaluate.outputs.check_run_ids }}
+  summary:
+    description: 'Markdown summary of evaluation results'
+    value: ${{ steps.evaluate.outputs.summary }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python_version }}
+
+    - name: Install Terraform
+      if: inputs.terraform_version != ''
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+
+    - name: Verify Terraform installation
+      shell: bash
+      run: |
+        if command -v terraform >/dev/null 2>&1; then
+          echo "Terraform version: $(terraform version -json | jq -r .terraform_version)"
+        else
+          echo "::warning::Terraform not found in PATH. KSI-MLA-EVC machine-based evaluation will FAIL."
+        fi
+
+    - name: Install Python dependencies
+      shell: bash
+      run: |
+        pip install --upgrade pip
+        pip install -r ${{ github.action_path }}/requirements.txt
+
+    - name: Verify required workflow permissions
+      shell: bash
+      env:
+        POST_CHECK_RUN: ${{ inputs.post_check_run }}
+      run: |
+        if [ "$POST_CHECK_RUN" = "true" ]; then
+          # We can't introspect the actual permissions block from inside the action,
+          # but we can confirm GITHUB_TOKEN is present and warn loudly if absent.
+          if [ -z "${GITHUB_TOKEN:-}" ]; then
+            echo "::error::post_check_run is enabled but GITHUB_TOKEN is not available."
+            echo "::error::Add 'permissions: { checks: write }' to your workflow."
+            exit 1
+          fi
+        fi
+
+    - name: Run FedRAMP KSI evaluation
+      id: evaluate
+      shell: bash
+      env:
+        INPUT_ROOT_PATHS: ${{ inputs.root_paths }}
+        INPUT_KSI_IDS: ${{ inputs.ksi_ids }}
+        INPUT_POST_CHECK_RUN: ${{ inputs.post_check_run }}
+        INPUT_ARTIFACT_PREFIX: ${{ inputs.artifact_prefix }}
+        GITHUB_TOKEN: ${{ github.token }}
+        FRMR_BUNDLE_DIR: ${{ github.action_path }}/data/frmr
+        PYTHONPATH: ${{ github.action_path }}
+      run: |
+        python ${{ github.action_path }}/action/src/main.py
+
+    - name: Upload KSI-MLA-EVC evidence artifact
+      if: steps.evaluate.outputs.mla_evc_artifact_name != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.evaluate.outputs.mla_evc_artifact_name }}
+        path: ${{ github.workspace }}/.fedramp-evidence/evidence/ksi-mla-evc/
+        retention-days: ${{ inputs.evidence_retention_days }}
+        if-no-files-found: error
+
+    - name: Upload KSI-CNA-RNT evidence artifact
+      if: steps.evaluate.outputs.cna_rnt_artifact_name != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.evaluate.outputs.cna_rnt_artifact_name }}
+        path: ${{ github.workspace }}/.fedramp-evidence/evidence/ksi-cna-rnt/
+        retention-days: ${{ inputs.evidence_retention_days }}
+        if-no-files-found: error
+
+    - name: Upload combined results summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: fedramp-ksi-results
+        path: ${{ github.workspace }}/.fedramp-evidence/results.json
+        retention-days: ${{ inputs.evidence_retention_days }}
+        if-no-files-found: warn

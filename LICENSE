@@ -19,3 +19,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+NOTICE — bundled third-party content
+
+This repository bundles the FedRAMP Machine-Readable (FRMR) Documentation
+JSON file at `data/frmr/FRMR.v0.9.43-beta.json`. That file is a work of the
+United States Government and is in the public domain pursuant to 17 USC §105.
+It is not subject to the MIT License above. The canonical source is the
+FedRAMP Program Management Office (https://www.fedramp.gov/).

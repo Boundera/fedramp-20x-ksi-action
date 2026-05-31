@@ -1,0 +1,21 @@
+# Code owners for fedramp-20x-ksi-action.
+#
+# Replace placeholder team handles with real Boundera engineering accounts
+# before enabling branch protection on main.
+
+*                                @Boundera/engineering
+
+# Critical security-adjacent modules — require additional review
+/action/src/check_run.py         @Boundera/engineering @Boundera/security
+/action/src/frmr_loader.py       @Boundera/engineering @Boundera/security
+
+# FRMR data — requires compliance-aware review
+/data/frmr/                      @Boundera/engineering @Boundera/compliance
+
+# Documentation
+/docs/                           @Boundera/engineering
+*.md                             @Boundera/engineering
+
+# CI / repo automation
+/.github/                        @Boundera/engineering
+/action.yml                      @Boundera/engineering
