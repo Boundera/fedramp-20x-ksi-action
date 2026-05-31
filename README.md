@@ -6,7 +6,7 @@
 [![FedRAMP 20x](https://img.shields.io/badge/FedRAMP-20x-0B2545.svg)](https://www.fedramp.gov/)
 [![FRMR](https://img.shields.io/badge/FRMR-v0.9.43--beta-1F6FEB.svg)](https://www.fedramp.gov/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-2088FF.svg?logo=github-actions)](https://github.com/marketplace?type=actions)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![Status: alpha](https://img.shields.io/badge/status-alpha-orange.svg)](#status)
 
 For Cloud Service Providers preparing FedRAMP 20x submissions. Run this action in your CI to continuously verify your Terraform IaC against `KSI-MLA-EVC` (Evaluating Configurations) and `KSI-CNA-RNT` (Restricting Network Traffic). The action runs entirely inside your GitHub Actions runner, produces evidence artifacts you can hand to a 3PAO, and posts Check Runs on your commits — with no Boundera-operated backend in the loop. Customer evidence never leaves GitHub-managed infrastructure.
