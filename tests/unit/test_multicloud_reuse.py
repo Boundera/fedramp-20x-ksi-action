@@ -23,6 +23,9 @@ _CASES = [
         ("KSI-CNA-DFP", "cna-dfp"),
         ("KSI-SVC-ASM", "svc-asm"),
     ]
+] + [
+    # CNA-ULN generalized to Azure DB servers via the public-flag table.
+    ("azure", "KSI-CNA-ULN", "cna-uln"),
 ]
 
 

@@ -16,13 +16,19 @@ from ..model import CheckClass, Finding, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "CNA-ULN/no-public-data-tier"
-# resource type -> attribute that must not be true
+# resource type -> attribute that must not be true (public exposure). The
+# evaluator is provider-agnostic; adding a cloud is a table entry, not new logic.
 _PUBLIC_FLAGS = {
+    # AWS
     "aws_db_instance": "publicly_accessible",
     "aws_rds_cluster_instance": "publicly_accessible",
     "aws_redshift_cluster": "publicly_accessible",
     "aws_instance": "associate_public_ip_address",
     "aws_dms_replication_instance": "publicly_accessible",
+    # Azure — data-tier servers must keep public network access disabled
+    "azurerm_mssql_server": "public_network_access_enabled",
+    "azurerm_postgresql_flexible_server": "public_network_access_enabled",
+    "azurerm_mysql_flexible_server": "public_network_access_enabled",
 }
 
 
