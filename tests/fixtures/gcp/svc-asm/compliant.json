@@ -1,0 +1,2 @@
+{ "format_version":"1.2","planned_values":{"root_module":{"resources":[
+ {"address":"google_secret_manager_secret.s","type":"google_secret_manager_secret","name":"s","provider_name":"registry.terraform.io/hashicorp/google","values":{"secret_id":"s"}}]}}}
