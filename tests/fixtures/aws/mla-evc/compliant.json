@@ -1,0 +1,41 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.7.5",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_s3_bucket.data",
+          "mode": "managed",
+          "type": "aws_s3_bucket",
+          "name": "data",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "values": { "bucket": "app-data" }
+        },
+        {
+          "address": "aws_config_configuration_recorder.main",
+          "mode": "managed",
+          "type": "aws_config_configuration_recorder",
+          "name": "main",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "values": {
+            "name": "default",
+            "recording_group": [{ "all_supported": true, "include_global_resource_types": true }]
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_s3_bucket.data",
+      "type": "aws_s3_bucket",
+      "change": { "actions": ["create"], "after_unknown": {} }
+    },
+    {
+      "address": "aws_config_configuration_recorder.main",
+      "type": "aws_config_configuration_recorder",
+      "change": { "actions": ["create"], "after_unknown": {} }
+    }
+  ]
+}

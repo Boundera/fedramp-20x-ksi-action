@@ -20,7 +20,15 @@ from .loader import load_plan_file
 from .loader.plan import load_plan
 from .model import AuthClass, Provider, Severity
 from .providers import build_graph
-from .reporters import RunMeta, RunReport, build_report, build_summary, write_evidence_pack
+from .reporters import (
+    RunMeta,
+    RunReport,
+    build_report,
+    build_summary,
+    post_check_run,
+    upsert_pr_comment,
+    write_evidence_pack,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +50,9 @@ class RunConfig:
     baseline_file: str = ""
     ksi_ids: tuple[str, ...] = ()
     output_dir: str = ".fedramp-evidence"
+    sarif_output: str = "fedramp-ksi.sarif"
+    post_check_run: bool = True
+    comment_on_pr: bool = True
     workspace: str = "."
     trigger_event: str = "unknown"
     meta: RunMeta = field(default_factory=RunMeta)
@@ -111,6 +122,16 @@ def run(config: RunConfig) -> RunResult:
     )
     report = build_report(engine_result, meta=config.meta)
     paths = write_evidence_pack(report, config.output_dir)
+
+    # Also emit SARIF at the configured path (for code-scanning upload).
+    if config.sarif_output:
+        sarif_out = Path(config.sarif_output)
+        if not sarif_out.is_absolute():
+            sarif_out = Path(config.workspace) / sarif_out
+        sarif_out.parent.mkdir(parents=True, exist_ok=True)
+        sarif_out.write_text(paths["sarif"].read_text(encoding="utf-8"), encoding="utf-8")
+        paths["sarif_output"] = sarif_out
+
     decision = decide(report, config.fail_on)
     return RunResult(report=report, artifact_paths=paths, decision=decision)
 
@@ -147,6 +168,9 @@ def _config_from_env() -> RunConfig:
         baseline_file=_env("INPUT_BASELINE_FILE", ""),
         ksi_ids=tuple(x.strip() for x in _env("INPUT_KSI_IDS", "").split(",") if x.strip()),
         output_dir=str(Path(workspace) / _env("INPUT_OUTPUT_DIR", ".fedramp-evidence")),
+        sarif_output=_env("INPUT_SARIF_OUTPUT", "fedramp-ksi.sarif"),
+        post_check_run=_env("INPUT_POST_CHECK_RUN", "true").lower() in ("true", "1", "yes"),
+        comment_on_pr=_env("INPUT_COMMENT_ON_PR", "true").lower() in ("true", "1", "yes"),
         workspace=workspace,
         trigger_event=_env("GITHUB_EVENT_NAME", "unknown"),
         meta=meta,
@@ -177,7 +201,9 @@ def main() -> int:
     _set_output("advisory_status", report.advisory_status.value)
     _set_output("findings_count", json.dumps(report.findings_by_severity()))
     _set_output("enforced_failures", str(report.enforced_failures))
-    _set_output("sarif_path", str(result.artifact_paths["sarif"]))
+    _set_output(
+        "sarif_path", str(result.artifact_paths.get("sarif_output", result.artifact_paths["sarif"]))
+    )
     _set_output("manifest_path", str(result.artifact_paths["manifest"]))
     _set_output("evidence_dir", config.output_dir)
     summary = build_summary(report)
@@ -187,6 +213,16 @@ def main() -> int:
     if step_summary:
         with open(step_summary, "a", encoding="utf-8") as f:
             f.write(summary)
+
+    # Post a Check Run and/or refresh the PR comment (egress: GitHub API only).
+    check_run_ids: list[int] = []
+    if config.post_check_run:
+        cid = post_check_run(report, decision)
+        if cid is not None:
+            check_run_ids.append(cid)
+    _set_output("check_run_ids", json.dumps(check_run_ids))
+    if config.comment_on_pr and config.trigger_event in ("pull_request", "pull_request_target"):
+        upsert_pr_comment(report)
 
     print(f"Gate: {report.gate_status.value}  ({decision.reason})")
     if decision.blocked:
