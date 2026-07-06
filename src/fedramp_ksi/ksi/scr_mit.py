@@ -11,13 +11,13 @@ control is the ECR repository configuration.
 from __future__ import annotations
 
 from ..engine.context import EvalContext
-from ..model import CheckClass, Finding, Severity, Status
+from ..model import CheckClass, Finding, Resource, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "SCR-MIT/ecr-scan-and-immutability"
 
 
-def _scan_on_push(res) -> bool:
+def _scan_on_push(res: Resource) -> bool:
     cfg = res.get("image_scanning_configuration")
     if isinstance(cfg, list) and cfg:
         return bool(cfg[0].get("scan_on_push"))

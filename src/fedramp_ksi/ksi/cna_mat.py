@@ -13,14 +13,14 @@ from __future__ import annotations
 
 from ..checks.network import is_world_open
 from ..engine.context import EvalContext
-from ..model import CheckClass, Finding, Severity, Status
+from ..model import CheckClass, Finding, NetworkRuleEntry, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "CNA-MAT/no-unnecessary-public-exposure"
 _PUBLIC_WEB_PORTS = {80, 443}
 
 
-def _exposes_non_web(entry) -> bool:
+def _exposes_non_web(entry: NetworkRuleEntry) -> bool:
     if entry.action != "allow" or entry.direction != "ingress" or not is_world_open(entry):
         return False
     # An all-ports rule (no range) to the world is always over-exposure.

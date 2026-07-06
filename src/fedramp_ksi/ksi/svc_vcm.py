@@ -12,13 +12,13 @@ is that load-balancer listeners use TLS rather than plaintext HTTP.
 from __future__ import annotations
 
 from ..engine.context import EvalContext
-from ..model import CheckClass, Finding, Severity, Status
+from ..model import CheckClass, Finding, Resource, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "SVC-VCM/tls-listeners"
 
 
-def _is_plaintext_http(res) -> bool:
+def _is_plaintext_http(res: Resource) -> bool:
     if str(res.get("protocol", "")).upper() != "HTTP":
         return False
     # An HTTP listener whose default action redirects to HTTPS is acceptable.

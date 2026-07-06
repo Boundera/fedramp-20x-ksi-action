@@ -10,6 +10,7 @@ snapshot of pre-existing findings; findings not in the baseline stay live
 from __future__ import annotations
 
 import fnmatch
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
@@ -18,6 +19,8 @@ from typing import Any
 import yaml
 
 from .model import Finding, Status
+
+FindingTransform = Callable[[list[Finding]], list[Finding]]
 
 
 @dataclass(frozen=True)
@@ -71,7 +74,7 @@ def load_waivers(path: str | Path) -> list[Waiver]:
     return waivers
 
 
-def waiver_transform(waivers: list[Waiver], today: date):
+def waiver_transform(waivers: list[Waiver], today: date) -> FindingTransform:
     """Return a finding transform that suppresses waived, unexpired FAILs."""
 
     def transform(findings: list[Finding]) -> list[Finding]:
@@ -108,7 +111,7 @@ def build_baseline(findings: list[Finding]) -> list[str]:
     return sorted({_fingerprint(f) for f in findings if f.status == Status.FAIL})
 
 
-def baseline_transform(fingerprints: set[str]):
+def baseline_transform(fingerprints: set[str]) -> FindingTransform:
     """Return a transform that suppresses FAILs present in the baseline snapshot."""
 
     def transform(findings: list[Finding]) -> list[Finding]:

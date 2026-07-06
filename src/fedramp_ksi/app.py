@@ -18,7 +18,7 @@ from .engine import Engine
 from .gate import GateDecision, decide
 from .loader import load_plan_file
 from .loader.plan import load_plan
-from .model import AuthClass, Provider, Severity
+from .model import AuthClass, Provider, Resource, Severity
 from .providers import build_graph
 from .reporters import (
     RunMeta,
@@ -29,6 +29,7 @@ from .reporters import (
     upsert_pr_comment,
     write_evidence_pack,
 )
+from .waivers import FindingTransform
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +78,7 @@ def _providers_scope(cfg: RunConfig) -> tuple[Provider, ...] | None:
     return tuple(scope) or None
 
 
-def _load_resources(cfg: RunConfig) -> list:
+def _load_resources(cfg: RunConfig) -> list[Resource]:
     if cfg.plan_json:
         return load_plan_file(cfg.plan_json)
     if cfg.terraform_dir:
@@ -87,7 +88,7 @@ def _load_resources(cfg: RunConfig) -> list:
     )
 
 
-def _generate_plan_and_load(cfg: RunConfig) -> list:
+def _generate_plan_and_load(cfg: RunConfig) -> list[Resource]:
     """Fallback mode: run terraform in a dir and load the resulting plan JSON."""
     workdir = Path(cfg.workspace) / cfg.terraform_dir
     subprocess.run(["terraform", "init", "-input=false", "-no-color"], cwd=workdir, check=True)
@@ -107,13 +108,13 @@ def _generate_plan_and_load(cfg: RunConfig) -> list:
     return load_plan(json.loads(show.stdout))
 
 
-def _build_transforms(config: RunConfig) -> list:
+def _build_transforms(config: RunConfig) -> list[FindingTransform]:
     """Assemble waiver + baseline finding transforms from the config."""
     from datetime import date
 
     from .waivers import baseline_transform, load_baseline, load_waivers, waiver_transform
 
-    transforms: list = []
+    transforms: list[FindingTransform] = []
     waivers_path = Path(config.workspace) / config.waivers_file
     waivers = load_waivers(waivers_path)
     if waivers:

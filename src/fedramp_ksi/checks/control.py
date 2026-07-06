@@ -8,6 +8,8 @@ false ``PASS``). This helper builds that finding for the common case.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from ..engine.context import EvalContext
 from ..model import CheckClass, DetectiveControl, Finding, Status
 
@@ -23,7 +25,7 @@ def detective_controls(ctx: EvalContext, *kinds: str) -> list[DetectiveControl]:
 
 def partial_if_declared(
     ctx: EvalContext,
-    controls: list,
+    controls: Sequence[object],
     *,
     check_id: str,
     declared_msg: str,

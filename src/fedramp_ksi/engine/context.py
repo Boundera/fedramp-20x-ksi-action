@@ -42,7 +42,7 @@ class EvalContext:
         severity: Severity | None = None,
         remediation: str = "",
         check_class: object = None,
-        details: dict | None = None,
+        details: dict[str, object] | None = None,
     ) -> Finding:
         """Helper to build a Finding pre-filled with KSI/context metadata."""
         from ..model import CheckClass

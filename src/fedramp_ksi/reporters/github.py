@@ -42,7 +42,9 @@ def _api_base() -> str:
     return os.environ.get("GITHUB_API_URL", "https://api.github.com").rstrip("/")
 
 
-def _request(method: str, url: str, token: str, payload: dict | None = None) -> dict[str, Any]:
+def _request(
+    method: str, url: str, token: str, payload: dict[str, Any] | None = None
+) -> dict[str, Any]:
     data = json.dumps(payload).encode("utf-8") if payload is not None else None
     req = urllib.request.Request(
         url=url,
@@ -57,7 +59,8 @@ def _request(method: str, url: str, token: str, payload: dict | None = None) -> 
         },
     )
     with urllib.request.urlopen(req, timeout=30) as resp:  # noqa: S310 — fixed api host
-        return json.loads(resp.read().decode("utf-8"))
+        body: dict[str, Any] = json.loads(resp.read().decode("utf-8"))
+        return body
 
 
 def post_check_run(

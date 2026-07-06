@@ -14,6 +14,7 @@ evaluator + fixtures (SPEC §1.8).
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 from ..model import (
@@ -27,14 +28,14 @@ from ..model import (
 )
 from ..model.graph import ResourceGraph
 from ..registry import RegistryEntry, all_entries, get_entry, get_evaluator
-from ..ruleset import Ruleset, load_ruleset
+from ..ruleset import KSIDefinition, Ruleset, load_ruleset
 from .context import EvalContext
 from .status import StatusPolicyError, rollup_status, validate_findings
 
 logger = logging.getLogger(__name__)
 
-# Optional hook: a callable that suppresses/annotates findings (waivers, baseline).
-FindingTransform = "callable"
+# A finding transform suppresses/annotates findings (waivers, baseline).
+FindingTransform = Callable[[list[Finding]], list[Finding]]
 
 
 @dataclass
@@ -90,10 +91,10 @@ class Engine:
     def __init__(
         self,
         ruleset: Ruleset | None = None,
-        finding_transforms: list | None = None,
+        finding_transforms: Sequence[FindingTransform] | None = None,
     ) -> None:
         self.ruleset = ruleset or load_ruleset()
-        self.finding_transforms = finding_transforms or []
+        self.finding_transforms: list[FindingTransform] = list(finding_transforms or [])
         # Importing the KSI package registers all evaluators (idempotent).
         from ..ksi import load_all
 
@@ -190,7 +191,7 @@ class Engine:
     @staticmethod
     def _error_result(
         entry: RegistryEntry,
-        ksi_def,
+        ksi_def: KSIDefinition,
         disposition: Disposition,
         enforced: bool,
         msg: str,

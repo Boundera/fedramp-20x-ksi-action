@@ -14,11 +14,14 @@ from ..registry import adapter
 
 def _cmek(res: Resource) -> str | None:
     ek = res.get("encryption") or res.get("disk_encryption_key")
+    key: object
     if isinstance(ek, list) and ek:
-        return ek[0].get("kms_key_name") or ek[0].get("kms_key_self_link")
-    if isinstance(ek, dict):
-        return ek.get("kms_key_name") or ek.get("kms_key_self_link")
-    return res.get("kms_key_name")
+        key = ek[0].get("kms_key_name") or ek[0].get("kms_key_self_link")
+    elif isinstance(ek, dict):
+        key = ek.get("kms_key_name") or ek.get("kms_key_self_link")
+    else:
+        key = res.get("kms_key_name")
+    return str(key) if key else None
 
 
 @adapter("google_compute_disk", "google_storage_bucket", "google_sql_database_instance")

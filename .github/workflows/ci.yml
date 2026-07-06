@@ -33,8 +33,10 @@ jobs:
       - name: Ruff format check
         run: ruff format --check .
 
-      - name: Mypy
-        run: mypy src/fedramp_ksi || true   # warnings only for now; tighten later
+      - name: Mypy (engine — must pass)
+        run: mypy src/fedramp_ksi --ignore-missing-imports --no-strict-optional
+      - name: Mypy (legacy — warnings only)
+        run: mypy action/ shared/ || true
 
       - name: COVERAGE.md in sync with the registry
         run: python tools/gen_coverage_doc.py --check

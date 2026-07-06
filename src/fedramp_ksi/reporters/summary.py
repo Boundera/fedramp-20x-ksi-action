@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from ..model import Status
+from ..model import KSIResult, Status
 from .report import RunReport
 
 _EMOJI = {
@@ -60,7 +60,7 @@ def build_summary(report: RunReport, *, pr_comment: bool = False) -> str:
     return "\n".join(lines)
 
 
-def _sorted_results(report: RunReport):
+def _sorted_results(report: RunReport) -> list[KSIResult]:
     # Failures first, then by KSI id — stable and readable.
     order = {
         Status.FAIL: 0,

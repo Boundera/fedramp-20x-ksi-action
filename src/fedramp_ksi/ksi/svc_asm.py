@@ -15,7 +15,7 @@ a known literal rather than a reference/unknown-after-apply value.
 from __future__ import annotations
 
 from ..engine.context import EvalContext
-from ..model import CheckClass, Finding, Severity, Status
+from ..model import CheckClass, Finding, Resource, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "SVC-ASM/no-hardcoded-secrets"
@@ -32,7 +32,7 @@ _SENSITIVE_ATTRS = {
 _SECRET_STORES = {"aws_secretsmanager_secret", "azurerm_key_vault", "google_secret_manager_secret"}
 
 
-def _is_hardcoded(res, attr: str) -> bool:
+def _is_hardcoded(res: Resource, attr: str) -> bool:
     if res.is_unknown(attr):
         return False  # sourced from a secret manager / computed ⇒ not hardcoded
     val = res.get(attr)

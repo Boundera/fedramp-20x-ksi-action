@@ -12,13 +12,13 @@ regions are captured), including management events.
 from __future__ import annotations
 
 from ..engine.context import EvalContext
-from ..model import CheckClass, Finding, Severity, Status
+from ..model import CheckClass, Finding, LoggingSink, Severity, Status
 from ..registry import register_evaluator
 
 CHECK = "MLA-LET/multi-region-management-events"
 
 
-def _trails(ctx: EvalContext):
+def _trails(ctx: EvalContext) -> list[LoggingSink]:
     return [
         s
         for s in ctx.graph.logging_sinks
