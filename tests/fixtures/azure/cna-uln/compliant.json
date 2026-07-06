@@ -1,0 +1,4 @@
+{ "format_version":"1.2","planned_values":{"root_module":{"resources":[
+ {"address":"azurerm_mssql_server.db","type":"azurerm_mssql_server","name":"db","provider_name":"registry.terraform.io/hashicorp/azurerm",
+  "values":{"name":"db","public_network_access_enabled":false}}]}},
+  "resource_changes":[{"address":"azurerm_mssql_server.db","change":{"actions":["create"],"after_unknown":{}}}]}

@@ -1,0 +1,5 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+    { "address": "aws_cloudtrail.main", "mode": "managed", "type": "aws_cloudtrail", "name": "main",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "values": { "name": "main", "is_multi_region_trail": true, "enable_log_file_validation": false, "enable_logging": true } }
+] } } }

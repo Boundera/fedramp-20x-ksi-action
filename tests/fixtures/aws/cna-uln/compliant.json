@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "aws_db_instance.pg", "type": "aws_db_instance", "name": "pg", "mode": "managed",
+    "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "publicly_accessible": false } } ] } },
+  "resource_changes": [ { "address": "aws_db_instance.pg", "change": { "actions": ["create"], "after_unknown": {} } } ] }

@@ -33,29 +33,53 @@ jobs:
       - name: Ruff format check
         run: ruff format --check .
 
-      - name: Mypy
-        run: mypy action/ shared/ || true   # warnings only for now; tighten later
+      - name: Mypy (engine — must pass)
+        run: mypy src/fedramp_ksi --ignore-missing-imports --no-strict-optional
+      - name: Mypy (legacy — warnings only)
+        run: mypy action/ shared/ || true
 
-      - name: Pytest
-        run: pytest -v --cov=action --cov=shared --cov-report=term-missing
+      - name: COVERAGE.md in sync with the registry
+        run: python tools/gen_coverage_doc.py --check
 
-  smoke-test-action:
+      - name: Pytest (engine ≥90% coverage gate)
+        run: |
+          pytest -v \
+            --cov=fedramp_ksi \
+            --cov-report=term-missing \
+            --cov-fail-under=90
+
+  gate-demo:
+    # Dogfood: prove the gate blocks a violating plan and passes a clean one.
     runs-on: ubuntu-latest
     needs: lint-test
     permissions:
       contents: read
-      actions: read
       checks: write
     steps:
       - uses: actions/checkout@v4
 
-      - uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: '1.7.0'
-
-      - name: Run the action against pass-repo fixture
-        if: ${{ hashFiles('tests/fixtures/pass-repo/main.tf') != '' }}
+      - name: Compliant plan should PASS (exit 0)
         uses: ./
         with:
-          root_paths: tests/fixtures/pass-repo
+          plan_json: tests/fixtures/aws/cna-rnt/compliant.json
+          ksi_ids: KSI-CNA-RNT
           post_check_run: 'false'
+          comment_on_pr: 'false'
+
+      - name: Violating plan should BLOCK (expect failure)
+        id: violate
+        continue-on-error: true
+        uses: ./
+        with:
+          plan_json: tests/fixtures/aws/cna-rnt/violating.json
+          ksi_ids: KSI-CNA-RNT
+          post_check_run: 'false'
+          comment_on_pr: 'false'
+
+      - name: Assert the violating plan blocked
+        run: |
+          if [ "${{ steps.violate.outcome }}" != "failure" ]; then
+            echo "::error::Expected the violating plan to block the gate, but it did not."
+            exit 1
+          fi
+          echo "Gate correctly blocked the violating plan."

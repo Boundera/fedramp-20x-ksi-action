@@ -1,0 +1,10 @@
+# FedRAMP 20x KSI waivers. A matching, UNEXPIRED waiver downgrades a FAIL to a
+# recorded, suppressed finding (still in the evidence manifest with reason +
+# approver + expiry). Expired or unmatched waivers leave the finding live and
+# gate-blocking. `expires` is REQUIRED.
+waivers:
+  - ksi: KSI-CNA-RNT
+    resource: aws_security_group.legacy_bastion   # exact address or glob
+    reason: "Bastion restricted via VPN; tracked in JIRA SEC-1421"
+    approved_by: jane@corp.com
+    expires: 2026-09-30

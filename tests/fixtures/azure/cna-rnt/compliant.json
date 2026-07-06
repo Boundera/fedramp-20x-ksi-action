@@ -1,0 +1,6 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "azurerm_network_security_rule.ssh", "mode": "managed", "type": "azurerm_network_security_rule", "name": "ssh",
+    "provider_name": "registry.terraform.io/hashicorp/azurerm",
+    "values": { "name": "ssh", "direction": "Inbound", "access": "Allow", "protocol": "Tcp",
+      "destination_port_range": "22", "source_address_prefix": "10.0.0.0/8", "priority": 100 } }
+] } } }

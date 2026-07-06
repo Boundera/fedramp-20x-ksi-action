@@ -1,0 +1,2 @@
+{ "format_version":"1.2","planned_values":{"root_module":{"resources":[
+ {"address":"azurerm_key_vault.kv","type":"azurerm_key_vault","name":"kv","provider_name":"registry.terraform.io/hashicorp/azurerm","values":{"name":"kv"}}]}}}

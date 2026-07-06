@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+    { "address": "aws_s3_bucket.d", "mode": "managed", "type": "aws_s3_bucket", "name": "d",
+      "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "bucket": "d" } }
+] } } }

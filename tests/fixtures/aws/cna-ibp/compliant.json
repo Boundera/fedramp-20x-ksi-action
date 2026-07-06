@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "aws_s3_bucket_public_access_block.b", "type": "aws_s3_bucket_public_access_block", "name": "b", "mode": "managed",
+    "provider_name": "registry.terraform.io/hashicorp/aws",
+    "values": { "block_public_acls": true, "block_public_policy": true, "ignore_public_acls": true, "restrict_public_buckets": true } } ] } } }
