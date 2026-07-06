@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "azurerm_managed_disk.data", "type": "azurerm_managed_disk", "name": "data", "mode": "managed",
+    "provider_name": "registry.terraform.io/hashicorp/azurerm",
+    "values": { "name": "data-disk", "disk_encryption_set_id": "/subscriptions/x/des/1" } } ] } } }

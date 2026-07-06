@@ -152,3 +152,62 @@ def test_provider_scope_filter() -> None:
     ]
     g = build_graph(load_plan(_plan(resources)), providers=(Provider.AWS,))
     assert {r.provider for r in g.resources} == {Provider.AWS}
+
+
+# --- Azure / GCP encryption adapters ---------------------------------------
+
+
+def test_azure_managed_disk_encryption() -> None:
+    g = build_graph(
+        load_plan(
+            _plan(
+                [
+                    _res(
+                        "azurerm_managed_disk.d",
+                        "azurerm_managed_disk",
+                        {"disk_encryption_set_id": "/des/1"},
+                        provider="azurerm",
+                    ),
+                ]
+            )
+        )
+    )
+    assert g.encryption_settings[0].at_rest_enabled is True
+    assert g.encryption_settings[0].kms_key == "/des/1"
+
+
+def test_azure_managed_disk_explicitly_unencrypted() -> None:
+    g = build_graph(
+        load_plan(
+            _plan(
+                [
+                    _res(
+                        "azurerm_managed_disk.d",
+                        "azurerm_managed_disk",
+                        {"encryption_settings": [{"enabled": False}]},
+                        provider="azurerm",
+                    ),
+                ]
+            )
+        )
+    )
+    assert g.encryption_settings[0].at_rest_enabled is False
+
+
+def test_gcp_encryption_records_cmek() -> None:
+    g = build_graph(
+        load_plan(
+            _plan(
+                [
+                    _res(
+                        "google_compute_disk.d",
+                        "google_compute_disk",
+                        {"disk_encryption_key": [{"kms_key_self_link": "projects/p/keys/k"}]},
+                        provider="google",
+                    ),
+                ]
+            )
+        )
+    )
+    assert g.encryption_settings[0].at_rest_enabled is True
+    assert g.encryption_settings[0].kms_key == "projects/p/keys/k"
