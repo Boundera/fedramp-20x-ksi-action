@@ -41,3 +41,30 @@ def partial_if_declared(
             message=declared_msg,
         )
     ]
+
+
+def partial_if_present(
+    ctx: EvalContext,
+    resource_types: set[str],
+    *,
+    check_id: str,
+    declared_msg: str,
+) -> list[Finding]:
+    """PARTIAL when a resource of one of ``resource_types`` is in scope, else N/A."""
+    present = [
+        r
+        for r in ctx.graph.resources
+        if r.type in resource_types and r.provider in ctx.providers_in_scope
+    ]
+    if not present:
+        return []
+    return [
+        ctx.finding(
+            check_id=check_id,
+            check_class=CheckClass.CONTROL_DECLARED,
+            status=Status.PARTIAL,
+            resource_address=present[0].address,
+            source=present[0].source,
+            message=declared_msg,
+        )
+    ]
