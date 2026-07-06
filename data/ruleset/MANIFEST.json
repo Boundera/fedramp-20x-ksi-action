@@ -1,0 +1,21 @@
+{
+  "ruleset_version": "2026.06.24.01",
+  "last_updated": "2026-06-24",
+  "source_file": "fedramp-consolidated-rules.2026.06.24.01.json",
+  "source_url": "https://raw.githubusercontent.com/FedRAMP/rules/main/fedramp-consolidated-rules.json",
+  "retrieved": "2026-06-29",
+  "sha256": "49a612c8f72e499cfe6df7b27a60a8a360d58cab1fc64591258ec65183b9a1c2",
+  "ksi_count": 46,
+  "themes": [
+    "CED",
+    "CMT",
+    "CNA",
+    "IAM",
+    "INR",
+    "MLA",
+    "PIY",
+    "RPL",
+    "SCR",
+    "SVC"
+  ]
+}
