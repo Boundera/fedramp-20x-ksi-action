@@ -71,6 +71,17 @@ def test_sarif_rules_declared_for_each_result() -> None:
         assert res["ruleId"] in rule_ids
 
 
+_SARIF_SCHEMA = Path(__file__).resolve().parents[2] / "data" / "schemas" / "sarif-schema-2.1.0.json"
+
+
+def test_sarif_validates_against_real_2_1_0_schema() -> None:
+    # SPEC §15.6 — SARIF validates against the 2.1.0 schema (not just structurally).
+    schema = json.loads(_SARIF_SCHEMA.read_text())
+    for name in ("violating.json", "compliant.json"):
+        sarif = build_sarif(_report(fixture("aws", "cna-rnt", name)))
+        jsonschema.validate(sarif, schema)
+
+
 # --- SDR conformance --------------------------------------------------------
 
 
