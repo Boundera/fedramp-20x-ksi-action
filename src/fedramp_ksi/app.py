@@ -48,6 +48,7 @@ class RunConfig:
     min_severity: Severity = Severity.LOW
     waivers_file: str = ".fedramp-ksi-waivers.yml"
     baseline_file: str = ""
+    today: str = ""  # ISO date for waiver-expiry evaluation; default = date.today()
     ksi_ids: tuple[str, ...] = ()
     output_dir: str = ".fedramp-evidence"
     sarif_output: str = "fedramp-ksi.sarif"
@@ -106,13 +107,32 @@ def _generate_plan_and_load(cfg: RunConfig) -> list:
     return load_plan(json.loads(show.stdout))
 
 
+def _build_transforms(config: RunConfig) -> list:
+    """Assemble waiver + baseline finding transforms from the config."""
+    from datetime import date
+
+    from .waivers import baseline_transform, load_baseline, load_waivers, waiver_transform
+
+    transforms: list = []
+    waivers_path = Path(config.workspace) / config.waivers_file
+    waivers = load_waivers(waivers_path)
+    if waivers:
+        today = date.fromisoformat(config.today) if config.today else date.today()
+        transforms.append(waiver_transform(waivers, today))
+    if config.baseline_file:
+        baseline = load_baseline(Path(config.workspace) / config.baseline_file)
+        if baseline:
+            transforms.append(baseline_transform(baseline))
+    return transforms
+
+
 def run(config: RunConfig) -> RunResult:
     """Execute the full pipeline and return the result (no process exit)."""
     resources = _load_resources(config)
     scope = _providers_scope(config)
     graph = build_graph(resources, scope)
 
-    engine = Engine()
+    engine = Engine(finding_transforms=_build_transforms(config))
     engine_result = engine.evaluate(
         graph,
         target_class=config.target_class,
@@ -166,6 +186,7 @@ def _config_from_env() -> RunConfig:
         fail_on=_env("INPUT_FAIL_ON", "enforce"),
         waivers_file=_env("INPUT_WAIVERS_FILE", ".fedramp-ksi-waivers.yml"),
         baseline_file=_env("INPUT_BASELINE_FILE", ""),
+        today=_env("KSI_TODAY", ""),
         ksi_ids=tuple(x.strip() for x in _env("INPUT_KSI_IDS", "").split(",") if x.strip()),
         output_dir=str(Path(workspace) / _env("INPUT_OUTPUT_DIR", ".fedramp-evidence")),
         sarif_output=_env("INPUT_SARIF_OUTPUT", "fedramp-ksi.sarif"),
