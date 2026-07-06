@@ -45,7 +45,7 @@ def is_world_open(entry: NetworkRuleEntry) -> bool:
 
 def world_open_sensitive_ports(entry: NetworkRuleEntry) -> list[tuple[int, str]]:
     """Return (port, label) pairs for sensitive ports this entry opens to the world."""
-    if entry.direction != "ingress" or not is_world_open(entry):
+    if entry.action != "allow" or entry.direction != "ingress" or not is_world_open(entry):
         return []
     hits: list[tuple[int, str]] = []
     for port, label in SENSITIVE_PORTS.items():
@@ -56,7 +56,7 @@ def world_open_sensitive_ports(entry: NetworkRuleEntry) -> list[tuple[int, str]]
 
 def unrestricted_egress_entries(rule: NetworkRule) -> list[NetworkRuleEntry]:
     """Egress entries that allow all traffic to the world (0.0.0.0/0)."""
-    return [e for e in rule.egress if is_world_open(e)]
+    return [e for e in rule.egress if e.action == "allow" and is_world_open(e)]
 
 
 def has_explicit_ingress(rule: NetworkRule) -> bool:

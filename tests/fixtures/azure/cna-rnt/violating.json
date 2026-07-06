@@ -1,0 +1,6 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "azurerm_network_security_rule.rdp", "mode": "managed", "type": "azurerm_network_security_rule", "name": "rdp",
+    "provider_name": "registry.terraform.io/hashicorp/azurerm",
+    "values": { "name": "rdp", "direction": "Inbound", "access": "Allow", "protocol": "Tcp",
+      "destination_port_range": "3389", "source_address_prefix": "Internet", "priority": 100 } }
+] } } }
