@@ -1,0 +1,9 @@
+{ "format_version": "1.2",
+  "planned_values": { "root_module": { "resources": [
+    { "address": "aws_db_instance.pg", "mode": "managed", "type": "aws_db_instance", "name": "pg",
+      "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "password": "hunter2-plaintext" } }
+  ] } },
+  "resource_changes": [
+    { "address": "aws_db_instance.pg", "type": "aws_db_instance", "change": { "actions": ["create"], "after_unknown": {} } }
+  ]
+}

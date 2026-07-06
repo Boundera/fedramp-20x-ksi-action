@@ -1,0 +1,12 @@
+{ "format_version": "1.2",
+  "planned_values": { "root_module": { "resources": [
+    { "address": "aws_secretsmanager_secret.db", "mode": "managed", "type": "aws_secretsmanager_secret", "name": "db",
+      "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "name": "db-secret" } },
+    { "address": "aws_db_instance.pg", "mode": "managed", "type": "aws_db_instance", "name": "pg",
+      "provider_name": "registry.terraform.io/hashicorp/aws", "values": {} }
+  ] } },
+  "resource_changes": [
+    { "address": "aws_secretsmanager_secret.db", "type": "aws_secretsmanager_secret", "change": { "actions": ["create"], "after_unknown": {} } },
+    { "address": "aws_db_instance.pg", "type": "aws_db_instance", "change": { "actions": ["create"], "after_unknown": { "password": true } } }
+  ]
+}

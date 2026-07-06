@@ -23,7 +23,7 @@ Ruleset **2026.06.24.01** (sha256 `49a612c8f72e499c…`) — **46 KSIs / 10 them
 | `KSI-CNA-DFP` | Defining Functionality and Privileges | enforce | ▫️ | cm-2, si-3 |
 | `KSI-CNA-EIS` | Enforcing Intended State | advisory → enforce @C | ▫️ | ca-2.1, ca-7.1 |
 | `KSI-CNA-IBP` | Implementing Best Practices | enforce | ▫️ | ac-17.3, cm-2, pl-10 |
-| `KSI-CNA-MAT` | Minimizing Attack Surface | enforce | ▫️ | ac-17.3, ac-18.1, ac-18.3, ac-20.1, ca-9, sc-7.3, sc-7.4, sc-7.5, sc-7.8, sc-8, sc-10, si-10, si-11, si-16 |
+| `KSI-CNA-MAT` | Minimizing Attack Surface | enforce | ✅ | ac-17.3, ac-18.1, ac-18.3, ac-20.1, ca-9, sc-7.3, sc-7.4, sc-7.5, sc-7.8, sc-8, sc-10, si-10, si-11, si-16 |
 | `KSI-CNA-OFA` | Optimizing for Availability | enforce | ▫️ | — |
 | `KSI-CNA-RNT` | Restricting Network Traffic | enforce | ✅ | ac-17.3, ca-9, cm-7.1, sc-7.5, si-8 |
 | `KSI-CNA-RVP` | Reviewing Protections | advisory | ▫️ | sc-5, si-8, si-8.2 |
@@ -47,14 +47,14 @@ Ruleset **2026.06.24.01** (sha256 `49a612c8f72e499c…`) — **46 KSIs / 10 them
 | `KSI-PIY-RIS` | Reviewing Investments in Security | manual | — | ac-5, ca-2, cp-2.1, cp-4.1, ir-3.2, pm-3, sa-2, sa-3, sr-2.1 |
 | `KSI-PIY-RSD` | Reviewing Security in the SDLC | manual | — | ac-5, au-3.3, cm-3.4, pl-8, pm-7, sa-3, sa-8, sc-4, sc-18, si-10, si-11, si-16 |
 | `KSI-PIY-RVD` | Reviewing Vulnerability Disclosures | manual | — | ra-5.11 |
-| `KSI-RPL-ABO` | Aligning Backups with Objectives | enforce | ▫️ | cm-2.3, cp-6, cp-9, cp-10, cp-10.2, si-12 |
+| `KSI-RPL-ABO` | Aligning Backups with Objectives | enforce | ✅ | cm-2.3, cp-6, cp-9, cp-10, cp-10.2, si-12 |
 | `KSI-RPL-ARP` | Aligning Recovery Plan | enforce | ▫️ | cp-2, cp-2.1, cp-2.3, cp-4.1, cp-6, cp-6.1, cp-6.3, cp-7, cp-7.1, cp-7.2, cp-7.3, cp-8, cp-8.1, cp-8.2, cp-10, cp-10.2 |
 | `KSI-RPL-RRO` | Reviewing Recovery Objectives | manual | — | cp-2.3, cp-10 |
 | `KSI-RPL-TRC` | Testing Recovery Capabilities | manual | — | cp-2.1, cp-2.3, cp-4, cp-4.1, cp-6, cp-6.1, cp-9.1, cp-10, ir-3, ir-3.2 |
 | `KSI-SCR-MIT` | Mitigating Supply Chain Risk | enforce | ▫️ | ac-20, ra-3.1, sa-9, sa-10, sa-11, sa-15.3, sa-22, si-7.1, sr-5, sr-6, ca-7.4, sc-18 |
 | `KSI-SCR-MON` | Monitoring Supply Chain Risk | advisory | ▫️ | ac-20, ca-3, ir-6.3, ps-7, ra-5, sa-9, si-5, sr-5, sr-6, sr-8 |
 | `KSI-SVC-ACM` | Automating Configuration Management | enforce | ▫️ | ac-2.4, cm-2, cm-2.2, cm-2.3, cm-6, cm-7.1, pl-9, pl-10, sa-5, si-5, sr-10 |
-| `KSI-SVC-ASM` | Automating Secret Management | enforce | ▫️ | ac-17.2, ia-5.2, ia-5.6, sc-12, sc-17 |
+| `KSI-SVC-ASM` | Automating Secret Management | enforce | ✅ | ac-17.2, ia-5.2, ia-5.6, sc-12, sc-17 |
 | `KSI-SVC-EIS` | Evaluating and Improving Security | manual | — | cm-7.1, cm-12.1, ma-2, pl-8, sc-7, sc-39, si-2.2, si-4, sr-10 |
 | `KSI-SVC-PRR` | Preventing Residual Risk | manual | — | sc-4 |
 | `KSI-SVC-RUD` | Removing Unwanted Data | manual | — | si-12.3, si-18.4 |
