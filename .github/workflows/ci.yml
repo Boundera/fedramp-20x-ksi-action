@@ -36,6 +36,9 @@ jobs:
       - name: Mypy
         run: mypy src/fedramp_ksi || true   # warnings only for now; tighten later
 
+      - name: COVERAGE.md in sync with the registry
+        run: python tools/gen_coverage_doc.py --check
+
       - name: Pytest (engine ≥90% coverage gate)
         run: |
           pytest -v \

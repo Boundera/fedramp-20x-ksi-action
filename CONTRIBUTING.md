@@ -2,6 +2,36 @@
 
 Thanks for considering a contribution. This document covers what we accept, how to propose changes, and what to expect in review.
 
+## Adding a KSI (the extensible path)
+
+Adding coverage is **a registry entry + an evaluator module + fixtures** — no
+edits to the orchestrator or dispatcher (evaluators and provider adapters are
+auto-discovered). Test-first:
+
+1. **Fixtures first.** Add `tests/fixtures/<provider>/<ksi-lower>/compliant.json`
+   and `violating.json` — real `terraform show -json` output. For an **enforce**
+   KSI both are required; the meta-test in `tests/unit/test_enforce_counterexamples.py`
+   fails if a violating fixture does not produce `FAIL`. *A check that cannot
+   fail is not a check.*
+2. **Adapter (if needed).** Map the provider resource type(s) into a normalized
+   model type in `src/fedramp_ksi/providers/<cloud>/*.py` with `@adapter(...)`.
+   Reuse an existing normalized type where possible.
+3. **Evaluator.** Add `src/fedramp_ksi/ksi/<ksi>.py` with an `@register_evaluator("KSI-...")`
+   function returning `Finding`s. Emit a `PASS` finding when in-scope resources
+   are compliant; return `[]` (⇒ `N/A`) when there are no in-scope resources.
+   Respect the [honest-status rules](docs/DECISIONS.md): enforce ≠ `PARTIAL`,
+   manual ≠ `PASS`/`FAIL`.
+4. **Regenerate docs.** `python tools/gen_coverage_doc.py` and commit
+   `docs/COVERAGE.md` (a test asserts it is in sync).
+5. **Run everything.** `ruff check . && ruff format --check . && pytest` — the
+   engine coverage gate is ≥90%.
+
+The KSI's disposition (enforce/advisory/manual) already lives in
+`src/fedramp_ksi/registry.py`; if you believe a disposition is wrong, change it
+there and update the SPEC/`docs/DECISIONS.md` rationale — the completeness test
+enforces the per-class totals.
+
+
 ## What we accept
 
 - **Additional evaluation criteria** for `KSI-MLA-EVC` (Evaluating Configurations) and `KSI-CNA-RNT` (Restricting Network Traffic). For example, additional Terraform patterns to detect, additional drift checks, or new evidence sources within the existing two KSIs.
