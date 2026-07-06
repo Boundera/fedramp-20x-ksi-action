@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "aws_s3_bucket.d", "type": "aws_s3_bucket", "name": "d", "mode": "managed", "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "bucket": "d" } },
+  { "address": "aws_config_config_rule.r", "type": "aws_config_config_rule", "name": "r", "mode": "managed", "provider_name": "registry.terraform.io/hashicorp/aws",
+    "values": { "name": "s3-enc", "source": [{ "source_identifier": "S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED" }] } } ] } } }

@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "aws_iam_account_password_policy.p", "type": "aws_iam_account_password_policy", "name": "p", "mode": "managed",
+    "provider_name": "registry.terraform.io/hashicorp/aws", "values": { "minimum_password_length": 16, "require_uppercase_characters": true,
+      "require_lowercase_characters": true, "require_numbers": true, "require_symbols": true } } ] } } }
