@@ -27,9 +27,7 @@ def _exposes_non_web(entry) -> bool:
     if entry.from_port is None or entry.to_port is None:
         return True
     # If the port range covers anything outside {80, 443}, it over-exposes.
-    return any(
-        port not in _PUBLIC_WEB_PORTS for port in range(entry.from_port, entry.to_port + 1)
-    )
+    return any(port not in _PUBLIC_WEB_PORTS for port in range(entry.from_port, entry.to_port + 1))
 
 
 @register_evaluator("KSI-CNA-MAT")

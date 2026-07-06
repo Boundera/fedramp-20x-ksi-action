@@ -1,0 +1,4 @@
+{ "format_version": "1.2", "planned_values": { "root_module": { "resources": [
+  { "address": "aws_security_group.app", "type": "aws_security_group", "name": "app", "mode": "managed",
+    "provider_name": "registry.terraform.io/hashicorp/aws",
+    "values": { "ingress": [ { "from_port": 0, "to_port": 0, "protocol": "-1", "cidr_blocks": ["10.0.0.0/8"] } ], "egress": [] } } ] } } }

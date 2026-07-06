@@ -20,14 +20,14 @@ Ruleset **2026.06.24.01** (sha256 `49a612c8f72e499c…`) — **46 KSIs / 10 them
 | `KSI-CMT-RMV` | Redeploying vs Modifying | manual | — | cm-2, cm-3, cm-5, cm-6, cm-7, cm-8.1, si-3 |
 | `KSI-CMT-RVP` | Reviewing Change Procedures | manual | — | cm-3, cm-3.2, cm-3.4, cm-5, cm-7.1, cm-9 |
 | `KSI-CMT-VTD` | Validating Throughout Deployment | advisory | ▫️ | cm-3, cm-3.2, cm-4.2, si-2 |
-| `KSI-CNA-DFP` | Defining Functionality and Privileges | enforce | ▫️ | cm-2, si-3 |
+| `KSI-CNA-DFP` | Defining Functionality and Privileges | enforce | ✅ | cm-2, si-3 |
 | `KSI-CNA-EIS` | Enforcing Intended State | advisory → enforce @C | ▫️ | ca-2.1, ca-7.1 |
-| `KSI-CNA-IBP` | Implementing Best Practices | enforce | ▫️ | ac-17.3, cm-2, pl-10 |
+| `KSI-CNA-IBP` | Implementing Best Practices | enforce | ✅ | ac-17.3, cm-2, pl-10 |
 | `KSI-CNA-MAT` | Minimizing Attack Surface | enforce | ✅ | ac-17.3, ac-18.1, ac-18.3, ac-20.1, ca-9, sc-7.3, sc-7.4, sc-7.5, sc-7.8, sc-8, sc-10, si-10, si-11, si-16 |
-| `KSI-CNA-OFA` | Optimizing for Availability | enforce | ▫️ | — |
+| `KSI-CNA-OFA` | Optimizing for Availability | enforce | ✅ | — |
 | `KSI-CNA-RNT` | Restricting Network Traffic | enforce | ✅ | ac-17.3, ca-9, cm-7.1, sc-7.5, si-8 |
 | `KSI-CNA-RVP` | Reviewing Protections | advisory | ▫️ | sc-5, si-8, si-8.2 |
-| `KSI-CNA-ULN` | Using Logical Networking | enforce | ▫️ | ac-12, ac-17.3, ca-9, sc-4, sc-7, sc-7.7, sc-8, sc-10 |
+| `KSI-CNA-ULN` | Using Logical Networking | enforce | ✅ | ac-12, ac-17.3, ca-9, sc-4, sc-7, sc-7.7, sc-8, sc-10 |
 | `KSI-IAM-AAM` | Automating Account Management | enforce | ▫️ | ac-2.2, ac-2.3, ac-2.13, ac-6.7, ia-4.4, ia-12, ia-12.2, ia-12.3, ia-12.5 |
 | `KSI-IAM-APM` | Adopting Passwordless Methods | enforce | ▫️ | ac-3, ia-5.1, ia-5.2, ia-5.6, ia-6, ac-2, ia-2, ia-2.1, ia-2.2, ia-2.8, ia-5, ia-8, sc-23 |
 | `KSI-IAM-ELP` | Ensuring Least Privilege | enforce | ✅ | ac-2.5, ac-2.6, ac-3, ac-4, ac-6, ac-12, ac-14, ac-17, ac-17.1, ac-17.2, ac-17.3, ac-20, ac-20.1, cm-2.7, cm-9, ia-2, ia-3, ia-4, ia-4.4, ia-5.2, ia-5.6, ia-11, ps-2, ps-3, ps-4, ps-5, ps-6, sc-4, sc-20, sc-21, sc-22, sc-23, sc-39, si-3 |
