@@ -1,3 +1,1 @@
-"""AWS provider adapters. Importing this package registers its adapters."""
-
-from . import detective, network  # noqa: F401
+"""AWS provider adapters (auto-discovered by the adapter registry)."""
