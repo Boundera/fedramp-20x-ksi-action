@@ -94,6 +94,10 @@ class Engine:
     ) -> None:
         self.ruleset = ruleset or load_ruleset()
         self.finding_transforms = finding_transforms or []
+        # Importing the KSI package registers all evaluators (idempotent).
+        from ..ksi import load_all
+
+        load_all()
 
     def evaluate(
         self,
