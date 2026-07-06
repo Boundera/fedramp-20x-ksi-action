@@ -33,10 +33,10 @@ Ruleset **2026.06.24.01** (sha256 `49a612c8f72e499c…`) — **46 KSIs / 10 them
 | `KSI-IAM-ELP` | Ensuring Least Privilege | enforce | ✅ | ac-2.5, ac-2.6, ac-3, ac-4, ac-6, ac-12, ac-14, ac-17, ac-17.1, ac-17.2, ac-17.3, ac-20, ac-20.1, cm-2.7, cm-9, ia-2, ia-3, ia-4, ia-4.4, ia-5.2, ia-5.6, ia-11, ps-2, ps-3, ps-4, ps-5, ps-6, sc-4, sc-20, sc-21, sc-22, sc-23, sc-39, si-3 |
 | `KSI-IAM-JIT` | Authorizing Just-in-Time | enforce | ▫️ | ac-2, ac-2.1, ac-2.2, ac-2.3, ac-2.4, ac-2.6, ac-3, ac-4, ac-5, ac-6, ac-6.1, ac-6.2, ac-6.5, ac-6.7, ac-6.9, ac-6.10, ac-7, ac-20.1, ac-17, au-9.4, cm-5, cm-7, cm-7.2, cm-7.5, cm-9, ia-4, ia-4.4, ia-7, ps-2, ps-3, ps-4, ps-5, ps-6, ps-9, ra-5.5, sc-2, sc-23, sc-39 |
 | `KSI-IAM-SNU` | Securing Non-User Authentication | enforce | ✅ | ac-2, ac-2.2, ac-4, ac-6.5, ia-3, ia-5.2, ra-5.5 |
-| `KSI-IAM-SUS` | Responding to Suspicious Activity | advisory | ▫️ | ac-2, ac-2.1, ac-2.3, ac-2.13, ac-7, ps-4, ps-8 |
-| `KSI-INR-AAR` | Generating After Action Reports | advisory | ▫️ | ir-3, ir-4, ir-4.1, ir-8 |
-| `KSI-INR-RIR` | Reviewing Incident Response Procedures | advisory | ▫️ | ir-4, ir-4.1, ir-6, ir-6.1, ir-6.3, ir-7, ir-7.1, ir-8, ir-8.1, si-4.5 |
-| `KSI-INR-RPI` | Reviewing Past Incidents | advisory | ▫️ | ir-3, ir-4, ir-4.1, ir-5, ir-8 |
+| `KSI-IAM-SUS` | Responding to Suspicious Activity | advisory | ✅ | ac-2, ac-2.1, ac-2.3, ac-2.13, ac-7, ps-4, ps-8 |
+| `KSI-INR-AAR` | Generating After Action Reports | advisory | ✅ | ir-3, ir-4, ir-4.1, ir-8 |
+| `KSI-INR-RIR` | Reviewing Incident Response Procedures | advisory | ✅ | ir-4, ir-4.1, ir-6, ir-6.1, ir-6.3, ir-7, ir-7.1, ir-8, ir-8.1, si-4.5 |
+| `KSI-INR-RPI` | Reviewing Past Incidents | advisory | ✅ | ir-3, ir-4, ir-4.1, ir-5, ir-8 |
 | `KSI-MLA-ALA` | Authorizing Log Access | advisory → enforce @C | ▫️ | si-11 |
 | `KSI-MLA-EVC` | Evaluating Configurations | enforce | ✅ | ca-7, cm-2, cm-6, si-7.7 |
 | `KSI-MLA-LET` | Logging Event Types | enforce | ✅ | ac-2.4, ac-6.9, ac-17.1, ac-20.1, au-2, au-7.1, au-12, si-4.4, si-4.5, si-7.7 |
